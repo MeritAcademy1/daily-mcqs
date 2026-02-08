@@ -140,35 +140,445 @@ const ADMIN_PASSWORD = "FalakPardiwala@786";
 /* DEFAULT QUESTIONS */
 const defaultQuestions = [
   {
-    question: "What is the capital of India?",
-    options: ["Mumbai", "Delhi", "Kolkata", "Chennai"],
-    correct: 1,
-    explanation: "Delhi is the capital of India."
-  },
-  {
-    question: "2 + 2 = ?",
-    options: ["3", "4", "5", "6"],
-    correct: 1,
-    explanation: "2 + 2 equals 4."
-  },
-  {
-    question: "Which planet is the Red Planet?",
-    options: ["Earth", "Mars", "Venus", "Jupiter"],
-    correct: 1,
-    explanation: "Mars is called the Red Planet."
-  },
-  {
-    question: "Who drafted the Indian Constitution?",
-    options: ["Nehru", "Gandhi", "Ambedkar", "Patel"],
-    correct: 2,
-    explanation: "Dr. B. R. Ambedkar drafted it."
-  },
-  {
-    question: "Largest ocean in the world?",
-    options: ["Indian", "Atlantic", "Pacific", "Arctic"],
-    correct: 2,
-    explanation: "Pacific Ocean is the largest."
-  }
+  question: "A multinational corporation centralizes liquidity management but allows subsidiaries to execute FX transactions locally within defined limits. Which treasury structure best describes this arrangement?",
+  options: [
+    "Fully centralized treasury",
+    "Fully decentralized treasury",
+    "Hybrid treasury structure",
+    "In-house bank model"
+  ],
+  correct: 2,
+  explanation: "A hybrid treasury structure combines centralized policy and oversight with decentralized execution. Central liquidity control with local FX execution fits this model. Option 1 is incorrect because fully centralized treasury would not allow local FX execution. Option 2 is incorrect because policies and liquidity are not locally controlled. Option 4 is incorrect because an in-house bank focuses on internal financial intermediation rather than governance structure."
+},
+{
+  question: "A company redesigns treasury operations so that gains from interest rate positioning and FX hedging directly impact divisional P&L. What is the MOST significant risk introduced by this change?",
+  options: [
+    "Reduced transparency in reporting",
+    "Pressure to assume speculative positions",
+    "Loss of economies of scale",
+    "Weakened internal controls"
+  ],
+  correct: 1,
+  explanation: "When treasury is treated as a profit center, there is increased pressure to generate earnings, which can encourage speculative risk-taking. Option 1 is incorrect because transparency can still be maintained with proper reporting. Option 3 is incorrect because profit center status does not inherently reduce scale efficiencies. Option 4 is incorrect because internal controls depend on governance, not profit orientation."
+},
+{
+  question: "Which responsibility MOST clearly differentiates the treasurer from the controller in a large organization?",
+  options: [
+    "Preparation of statutory financial statements",
+    "Management of external auditor relationships",
+    "Liquidity, funding, and financial risk management",
+    "Oversight of internal accounting controls"
+  ],
+  correct: 2,
+  explanation: "The treasurer is responsible for liquidity management, funding, and financial risk. Option 1 is incorrect because statutory reporting is a controller function. Option 2 is incorrect because auditor coordination typically falls under the controller. Option 4 is incorrect because internal accounting controls are also the controller’s responsibility."
+},
+{
+  question: "A board establishes strict treasury policies but allows management discretion within defined limits. From a corporate governance perspective, this primarily addresses which issue?",
+  options: [
+    "Market risk exposure",
+    "Operational efficiency",
+    "Agency conflict",
+    "Regulatory arbitrage"
+  ],
+  correct: 2,
+  explanation: "Agency conflict arises when management actions may diverge from shareholder interests. Policies with controlled discretion align management behavior. Option 1 is incorrect because policies do not directly eliminate market risk. Option 2 is incorrect because governance focuses on oversight, not efficiency. Option 4 is incorrect because regulatory arbitrage relates to exploiting regulatory differences."
+},
+{
+  question: "Why is the internal audit function typically structured to report directly to the board or audit committee?",
+  options: [
+    "To enhance operational efficiency",
+    "To support treasury profit generation",
+    "To ensure independence and objectivity",
+    "To reduce compliance costs"
+  ],
+  correct: 2,
+  explanation: "Direct reporting ensures independence and objectivity of internal audit. Option 1 is incorrect because efficiency is not the primary objective. Option 2 is incorrect because internal audit does not generate profits. Option 4 is incorrect because independence, not cost reduction, is the key concern."
+},
+{
+  question: "A global organization establishes a centralized entity that nets intercompany receivables and payables, reducing external cash flows. This function is MOST closely associated with:",
+  options: [
+    "Decentralized treasury",
+    "Shared services center",
+    "In-house bank",
+    "Profit center treasury"
+  ],
+  correct: 2,
+  explanation: "An in-house bank performs internal netting and settlement, reducing reliance on external banks. Option 1 is incorrect because decentralization increases external flows. Option 2 is incorrect because SSCs focus on operational efficiency, not financial intermediation. Option 4 is incorrect because profit center classification does not define netting activities."
+},
+{
+  question: "Which factor MOST strongly supports the decision to establish regional treasury centers instead of a single global center?",
+  options: [
+    "Higher transaction volumes",
+    "Regulatory and time-zone complexity",
+    "Desire to decentralize authority",
+    "Lower technology costs"
+  ],
+  correct: 1,
+  explanation: "Regional treasury centers help manage regulatory differences and time zones while maintaining oversight. Option 1 is incorrect because volume alone does not require regionalization. Option 3 is incorrect because authority can remain centralized. Option 4 is incorrect because technology costs are not the primary driver."
+},
+{
+  question: "Under NYSE corporate governance standards, which board composition requirement directly strengthens oversight of treasury activities?",
+  options: [
+    "Majority executive directors",
+    "Independent audit committee",
+    "CEO serving as board chair",
+    "Treasurer reporting to controller"
+  ],
+  correct: 1,
+  explanation: "An independent audit committee strengthens oversight of financial reporting and treasury controls. Option 1 is incorrect because executives reduce independence. Option 3 is incorrect because combining CEO and chair weakens oversight. Option 4 is incorrect because reporting lines do not substitute for board governance."
+},
+{
+  question: "Why is treasury traditionally classified as a cost center rather than a revenue center?",
+  options: [
+    "It incurs higher operational risk",
+    "It does not engage in core revenue-generating activities",
+    "It lacks strategic importance",
+    "It reports through finance rather than operations"
+  ],
+  correct: 1,
+  explanation: "Treasury supports business operations but does not directly generate revenue. Option 1 is incorrect because risk level does not define cost centers. Option 3 is incorrect because treasury is strategically important. Option 4 is incorrect because reporting structure is irrelevant."
+},
+{
+  question: "Which ethical obligation MOST directly restricts treasury professionals from exploiting confidential market information?",
+  options: [
+    "Maximizing shareholder value",
+    "Compliance with internal policies",
+    "Integrity and professional conduct standards",
+    "Achieving operational efficiency"
+  ],
+  correct: 2,
+  explanation: "Integrity and professional conduct standards prohibit misuse of confidential information. Option 1 is incorrect because shareholder value does not justify unethical behavior. Option 2 is incorrect because policies derive from ethical standards, not vice versa. Option 4 is incorrect because efficiency does not address ethical misuse."
+}
+{
+  question: "A company allows its treasury team to actively manage interest rate exposure but prohibits any transaction without an underlying exposure. Which treasury principle is being enforced?",
+  options: [
+    "Profit maximization",
+    "Speculative trading",
+    "Hedging discipline",
+    "Liquidity arbitrage"
+  ],
+  correct: 2,
+  explanation: "Hedging discipline requires that treasury transactions be linked to genuine underlying exposures. Option 1 is incorrect because profit maximization is not the guiding principle here. Option 2 is incorrect because speculation involves taking positions without underlying exposure. Option 4 is incorrect because liquidity arbitrage refers to exploiting funding differences, not exposure-based controls."
+},
+{
+  question: "Which situation BEST illustrates a breakdown of the agency relationship in treasury management?",
+  options: [
+    "Treasury follows board-approved risk limits",
+    "Management delays hedge execution to improve reported earnings",
+    "Board reviews treasury policy annually",
+    "Independent audit committee reviews controls"
+  ],
+  correct: 1,
+  explanation: "Delaying hedging to manipulate earnings reflects management acting in self-interest rather than shareholder interest, a classic agency problem. Option 1 is incorrect because compliance aligns interests. Option 3 is incorrect because policy review strengthens governance. Option 4 is incorrect because independent oversight reduces agency risk."
+},
+{
+  question: "Why does treating treasury as a profit center require stronger governance compared to a cost center model?",
+  options: [
+    "Because accounting complexity increases",
+    "Because treasury gains pricing power",
+    "Because incentives may conflict with risk appetite",
+    "Because operational volume increases"
+  ],
+  correct: 2,
+  explanation: "Profit incentives may encourage treasury to exceed the firm’s risk appetite, requiring stronger governance. Option 1 is incorrect because complexity alone does not drive governance needs. Option 2 is incorrect because treasury does not gain pricing power. Option 4 is incorrect because volume does not inherently increase risk incentives."
+},
+{
+  question: "Which treasury activity MOST directly supports compliance with anti-money laundering (AML) regulations?",
+  options: [
+    "Cash flow forecasting",
+    "FX exposure measurement",
+    "Clear ownership and authorization of accounts",
+    "Short-term investment optimization"
+  ],
+  correct: 2,
+  explanation: "Clear ownership and authorization of accounts help prevent misuse of funds and support AML compliance. Option 1 is incorrect because forecasting is operational. Option 2 is incorrect because exposure measurement is risk-focused, not AML-focused. Option 4 is incorrect because investment optimization does not address AML requirements."
+},
+{
+  question: "A company chooses a decentralized treasury structure. Which consequence is MOST likely if governance mechanisms are weak?",
+  options: [
+    "Improved economies of scale",
+    "Reduced transaction costs",
+    "Inconsistent risk management practices",
+    "Enhanced global visibility"
+  ],
+  correct: 2,
+  explanation: "Weak governance in decentralized structures leads to inconsistent risk practices across units. Option 1 is incorrect because decentralization reduces scale benefits. Option 2 is incorrect because transaction costs usually increase. Option 4 is incorrect because visibility is typically reduced."
+},
+{
+  question: "Which responsibility is MOST likely retained by the board even when treasury operations are fully centralized?",
+  options: [
+    "Daily cash positioning",
+    "Execution of FX trades",
+    "Approval of treasury risk policy",
+    "Bank account reconciliation"
+  ],
+  correct: 2,
+  explanation: "The board retains responsibility for approving treasury risk policy. Option 1 is incorrect because cash positioning is operational. Option 2 is incorrect because trade execution is delegated. Option 4 is incorrect because reconciliation is an accounting function."
+},
+{
+  question: "In a dual-board governance system, which body is primarily responsible for monitoring treasury risk management?",
+  options: [
+    "Management board",
+    "Supervisory board",
+    "Treasury committee",
+    "Internal audit department"
+  ],
+  correct: 1,
+  explanation: "The supervisory board oversees and monitors management, including treasury risk. Option 1 is incorrect because management executes, not oversees. Option 3 is incorrect because such committees are not universal. Option 4 is incorrect because internal audit supports oversight but does not replace board responsibility."
+},
+{
+  question: "Why might a multinational avoid full treasury decentralization despite strong local expertise?",
+  options: [
+    "Higher tax exposure",
+    "Loss of strategic control over liquidity",
+    "Reduced reporting requirements",
+    "Lower regulatory scrutiny"
+  ],
+  correct: 1,
+  explanation: "Decentralization reduces centralized visibility and strategic control over liquidity. Option 1 is incorrect because tax exposure depends on structure, not decentralization alone. Option 3 is incorrect because reporting usually becomes more complex. Option 4 is incorrect because scrutiny often increases, not decreases."
+},
+{
+  question: "Which role is MOST responsible for maintaining relationships with banks, credit rating agencies, and external lenders?",
+  options: [
+    "Controller",
+    "Cash Manager",
+    "Treasurer",
+    "Internal Auditor"
+  ],
+  correct: 2,
+  explanation: "The treasurer manages external financial relationships and funding sources. Option 1 is incorrect because the controller focuses on reporting. Option 2 is incorrect because the cash manager handles daily liquidity. Option 4 is incorrect because internal audit focuses on assurance, not relationships."
+},
+{
+  question: "Why are ethical standards particularly critical in treasury compared to other finance functions?",
+  options: [
+    "Treasury handles confidential market-sensitive information",
+    "Treasury determines accounting standards",
+    "Treasury controls operational staffing",
+    "Treasury manages production assets"
+  ],
+  correct: 0,
+  explanation: "Treasury has access to highly sensitive information such as funding plans and hedging strategies, making ethics critical. Option 2 is incorrect because accounting standards are externally defined. Option 3 is incorrect because staffing is not treasury’s role. Option 4 is incorrect because treasury manages financial, not production, assets."
+}
+{
+  question: "Which scenario BEST demonstrates treasury acting beyond its appropriate mandate?",
+  options: [
+    "Executing hedges within approved limits",
+    "Optimizing short-term investments per policy",
+    "Taking FX positions to boost quarterly earnings without exposure",
+    "Centralizing bank account management"
+  ],
+  correct: 2,
+  explanation: "Taking FX positions without underlying exposure is speculative and exceeds treasury’s mandate. Option 1 is incorrect because it follows policy. Option 2 is incorrect because investment optimization is a treasury duty. Option 4 is incorrect because bank account centralization is standard treasury governance."
+},
+{
+  question: "Why does the board typically approve treasury policy rather than management alone?",
+  options: [
+    "To reduce transaction costs",
+    "To eliminate operational errors",
+    "To ensure alignment with shareholder risk appetite",
+    "To improve daily liquidity forecasting"
+  ],
+  correct: 2,
+  explanation: "Treasury policy defines risk appetite, which must align with shareholder interests and therefore requires board approval. Option 1 is incorrect because cost reduction is operational. Option 2 is incorrect because policy does not eliminate errors. Option 4 is incorrect because forecasting is managerial."
+},
+{
+  question: "A company’s treasury reports unusually smooth earnings despite volatile markets. What governance concern does this raise?",
+  options: [
+    "Excessive cash buffers",
+    "Potential earnings management through timing of hedges",
+    "Weak banking relationships",
+    "Overinvestment in short-term instruments"
+  ],
+  correct: 1,
+  explanation: "Unnaturally smooth earnings may indicate hedge timing to manage earnings, a governance concern. Option 1 is incorrect because cash buffers do not smooth earnings. Option 3 is incorrect because bank relationships are unrelated. Option 4 is incorrect because short-term investments affect liquidity, not earnings smoothing."
+},
+{
+  question: "Which treasury responsibility MOST directly affects a firm’s credit rating?",
+  options: [
+    "Daily cash positioning",
+    "Capital structure and funding strategy",
+    "Accounts receivable monitoring",
+    "Invoice processing"
+  ],
+  correct: 1,
+  explanation: "Credit ratings depend heavily on capital structure and funding strategy. Option 1 is incorrect because daily positioning is short-term. Option 3 is incorrect because AR is operational. Option 4 is incorrect because invoicing is administrative."
+},
+{
+  question: "Why is segregation of duties critical in treasury operations?",
+  options: [
+    "To improve FX pricing",
+    "To enhance profitability",
+    "To reduce fraud and operational risk",
+    "To accelerate decision-making"
+  ],
+  correct: 2,
+  explanation: "Segregation of duties prevents fraud and reduces operational risk. Option 1 is incorrect because pricing is market-driven. Option 2 is incorrect because segregation controls risk, not profit. Option 4 is incorrect because segregation may slow decisions."
+},
+{
+  question: "Which treasury activity would MOST likely be reviewed by regulators during a compliance audit?",
+  options: [
+    "Choice of forecasting methodology",
+    "Authorization and documentation of payments",
+    "Selection of investment benchmarks",
+    "Frequency of treasury reporting"
+  ],
+  correct: 1,
+  explanation: "Payment authorization and documentation are key compliance and control areas. Option 1 is incorrect because methodology choice is internal. Option 3 is incorrect because benchmarks are managerial. Option 4 is incorrect because reporting frequency is secondary."
+},
+{
+  question: "Why does a centralized treasury generally improve visibility of global liquidity?",
+  options: [
+    "It reduces accounting complexity",
+    "It consolidates cash information and control",
+    "It eliminates currency exposure",
+    "It decentralizes reporting responsibility"
+  ],
+  correct: 1,
+  explanation: "Centralization consolidates cash data and control, improving visibility. Option 1 is incorrect because complexity may increase. Option 3 is incorrect because FX exposure remains. Option 4 is incorrect because reporting is centralized, not decentralized."
+},
+{
+  question: "Which outcome BEST reflects poor treasury governance?",
+  options: [
+    "Conservative investment policies",
+    "Clear reporting lines",
+    "Unauthorized derivative transactions",
+    "Centralized bank relationships"
+  ],
+  correct: 2,
+  explanation: "Unauthorized derivative transactions indicate weak controls and governance. Option 1 is incorrect because conservatism reduces risk. Option 2 is incorrect because clear reporting strengthens governance. Option 4 is incorrect because centralization improves oversight."
+},
+{
+  question: "Why might a firm separate the roles of cash manager and risk manager?",
+  options: [
+    "To increase transaction volume",
+    "To reduce system costs",
+    "To strengthen internal controls",
+    "To improve FX forecasting accuracy"
+  ],
+  correct: 2,
+  explanation: "Separating roles strengthens internal controls and segregation of duties. Option 1 is incorrect because volume is irrelevant. Option 2 is incorrect because system costs are unaffected. Option 4 is incorrect because forecasting accuracy depends on data, not role separation."
+},
+{
+  question: "Which factor MOST limits treasury’s ability to act independently?",
+  options: [
+    "Market volatility",
+    "Treasury technology",
+    "Board-approved risk appetite",
+    "Bank relationship depth"
+  ],
+  correct: 2,
+  explanation: "Board-approved risk appetite constrains treasury actions. Option 1 is incorrect because volatility affects markets, not authority. Option 2 is incorrect because technology enables, not limits. Option 4 is incorrect because relationships do not define authority."
+},
+{
+  question: "Which treasury decision has the GREATEST long-term strategic impact?",
+  options: [
+    "Daily investment selection",
+    "Choice of cash pooling structure",
+    "Intraday liquidity positioning",
+    "Timing of individual FX trades"
+  ],
+  correct: 1,
+  explanation: "Cash pooling structure affects liquidity efficiency, tax, and control long-term. Option 1 is incorrect because investments are tactical. Option 3 is incorrect because intraday actions are short-term. Option 4 is incorrect because individual trades are tactical."
+},
+{
+  question: "Why do regulators emphasize documentation in treasury transactions?",
+  options: [
+    "To increase reporting workload",
+    "To improve market transparency",
+    "To enable audit trails and accountability",
+    "To support speculative flexibility"
+  ],
+  correct: 2,
+  explanation: "Documentation ensures audit trails and accountability. Option 1 is incorrect because workload is incidental. Option 2 is incorrect because documentation is internal. Option 4 is incorrect because speculation is discouraged."
+},
+{
+  question: "Which governance mechanism MOST directly limits excessive treasury risk-taking?",
+  options: [
+    "Advanced treasury systems",
+    "Performance-based compensation",
+    "Clearly defined risk limits",
+    "High transaction volumes"
+  ],
+  correct: 2,
+  explanation: "Risk limits directly cap exposure and risk-taking. Option 1 is incorrect because systems do not enforce behavior alone. Option 2 is incorrect because incentives may increase risk. Option 4 is incorrect because volume does not control risk."
+},
+{
+  question: "Why might treasury involvement in ESG considerations increase over time?",
+  options: [
+    "Treasury controls marketing strategy",
+    "Financing and investment decisions affect ESG outcomes",
+    "ESG replaces financial performance metrics",
+    "Treasury manages human resources"
+  ],
+  correct: 1,
+  explanation: "Treasury decisions on funding and investments directly influence ESG outcomes. Option 1 is incorrect because marketing is unrelated. Option 3 is incorrect because ESG complements, not replaces, financial metrics. Option 4 is incorrect because HR is separate."
+},
+{
+  question: "Which practice BEST supports ethical treasury behavior?",
+  options: [
+    "Aggressive earnings targets",
+    "Concentration of authority",
+    "Clear policies and independent oversight",
+    "Minimal documentation"
+  ],
+  correct: 2,
+  explanation: "Clear policies and independent oversight support ethical behavior. Option 1 is incorrect because aggressive targets increase pressure. Option 2 is incorrect because concentration increases risk. Option 4 is incorrect because minimal documentation weakens controls."
+},
+{
+  question: "Why is treasury policy review considered a continuous process?",
+  options: [
+    "Markets and risks evolve over time",
+    "Accounting rules frequently change",
+    "Payment volumes always increase",
+    "Bank fees fluctuate daily"
+  ],
+  correct: 0,
+  explanation: "Evolving markets and risks require ongoing policy review. Option 2 is incorrect because accounting changes are not the driver. Option 3 is incorrect because volume growth is not universal. Option 4 is incorrect because daily fee changes are tactical."
+},
+{
+  question: "Which treasury failure would MOST likely damage stakeholder trust?",
+  options: [
+    "Conservative cash investment returns",
+    "Delayed reporting",
+    "Undisclosed risk exposures",
+    "Centralized payment processing"
+  ],
+  correct: 2,
+  explanation: "Undisclosed risk exposures undermine transparency and trust. Option 1 is incorrect because low returns are acceptable. Option 2 is incorrect because delays are operational. Option 4 is incorrect because centralization improves control."
+},
+{
+  question: "Why is treasury transparency critical to corporate governance?",
+  options: [
+    "It reduces FX volatility",
+    "It supports informed oversight and accountability",
+    "It increases speculative capacity",
+    "It eliminates funding needs"
+  ],
+  correct: 1,
+  explanation: "Transparency enables oversight and accountability. Option 1 is incorrect because transparency does not affect volatility. Option 3 is incorrect because speculation is discouraged. Option 4 is incorrect because funding needs remain."
+},
+{
+  question: "Which decision BEST illustrates treasury supporting overall corporate strategy?",
+  options: [
+    "Selecting a new accounting system",
+    "Structuring funding to support expansion plans",
+    "Reconciling bank statements",
+    "Processing vendor payments"
+  ],
+  correct: 1,
+  explanation: "Funding structure directly supports strategic expansion. Option 1 is incorrect because systems are operational. Option 3 is incorrect because reconciliation is administrative. Option 4 is incorrect because payments are routine."
+},
+{
+  question: "What is the PRIMARY objective of treasury management as defined in professional standards?",
+  options: [
+    "Maximize short-term profits",
+    "Eliminate all financial risk",
+    "Support business strategy through effective cash and risk management",
+    "Ensure compliance with accounting rules"
+  ],
+  correct: 2,
+  explanation: "Treasury’s primary objective is to support strategy via cash and risk management. Option 1 is incorrect because profit maximization is not primary. Option 2 is incorrect because risk cannot be eliminated. Option 4 is incorrect because compliance is secondary."
+}
 ];
 
 let questions = JSON.parse(localStorage.getItem("questions")) || defaultQuestions;
@@ -293,3 +703,4 @@ function saveQuestions() {
 
 </body>
 </html>
+
