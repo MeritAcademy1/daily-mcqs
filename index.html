@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Merit Academy MCQ</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #f4f8ff;
+}
+
+header {
+  background: #0b3c6d;
+  color: white;
+  padding: 14px;
+  font-size: 22px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.container {
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+  text-align: center;
+}
+
+.title {
+  font-size: 40px;
+  color: #0b3c6d;
+  font-weight: bold;
+}
+
+.subtitle {
+  font-size: 18px;
+  color: #0b3c6d;
+  margin-bottom: 30px;
+}
+
+input {
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+button {
+  margin-top: 20px;
+  padding: 12px 25px;
+  font-size: 16px;
+  background: #0b3c6d;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.option {
+  background: #eee;
+  padding: 14px;
+  margin: 10px 0;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.option:hover { background: #dde8ff; }
+
+.correct { background: #b6f5c3 !important; }
+.wrong { background: #f7b2b2 !important; }
+
+.hidden { display: none; }
+
+#timer {
+  font-weight: bold;
+  color: red;
+  margin-bottom: 10px;
+}
+
+textarea {
+  width: 100%;
+  height: 320px;
+  font-size: 14px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  Merit Academy
+  <span style="font-size:14px; cursor:pointer;" onclick="openAdmin()">Admin</span>
+</header>
+
+<div class="container">
+
+<!-- WELCOME PAGE -->
+<div id="startPage">
+  <div class="title">MERIT ACADEMY</div>
+  <div class="subtitle">~ CTP Falak Meer</div>
+  <input id="studentName" placeholder="Enter your name">
+  <button onclick="startTest()">Start Test</button>
+</div>
+
+<!-- QUIZ PAGE -->
+<div id="quizPage" class="hidden">
+  <div id="timer"></div>
+  <h3 id="question"></h3>
+  <div id="options"></div>
+  <p id="explanation"></p>
+  <button id="nextBtn" class="hidden" onclick="nextQuestion()">Next Question</button>
+</div>
+
+<!-- RESULT PAGE -->
+<div id="resultPage" class="hidden">
+  <h2>Today's Performance</h2>
+  <p id="finalName"></p>
+  <p id="finalScore"></p>
+  <p id="finalAccuracy"></p>
+</div>
+
+<!-- ADMIN PAGE -->
+<div id="adminPage" class="hidden">
+  <h2>Admin Panel</h2>
+  <p>Edit exactly 5 questions (JSON format)</p>
+  <textarea id="adminEditor"></textarea>
+  <button onclick="saveQuestions()">Save Questions</button>
+</div>
+
+</div>
+
+<script>
+const ADMIN_PASSWORD = "FalakPardiwala@786";
+
+/* DEFAULT QUESTIONS */
+const defaultQuestions = [
+  {
+  question: "What are the two primary objectives of national legislators and regulators to ensure the safety and soundness of the financial system?",
+  options: [
+    "Minimize the risk of failure of individual institutions and prevent contagion effects between institutions.",
+    "Maximize profits of financial institutions and promote international trade.",
+    "Regulate only domestic banking systems and restrict shadow banking activities.",
+    "Promote digital currencies and reduce regulatory oversight."
+  ],
+  correct: 0,
+  explanation: "The primary objectives are to ensure financial institutions are managed to minimize failure risk and to prevent contagion effects if failure occurs, thereby maintaining systemic stability. Option 2 is incorrect because profit maximization and trade promotion are not prudential objectives. Option 3 is incorrect because regulation extends beyond only domestic banks or shadow banking. Option 4 is incorrect because reducing oversight contradicts financial stability goals."
+},
+{
+  question: "What was a key reason for the spread of the 2007-09 financial crisis across multiple countries?",
+  options: [
+    "Regulation of shadow banking was too strict.",
+    "Many financial institutions across countries exhibited similar risky behaviors.",
+    "Excessive regulation prevented bank failures.",
+    "The crisis originated solely from a single country."
+  ],
+  correct: 1,
+  explanation: "The crisis spread globally because institutions in multiple countries engaged in similar risky practices, such as mispricing assets and relying on short-term funding for long-term assets, combined with global financial interconnectedness. The other options misrepresent the causes of systemic contagion."
+},
+{
+  question: "Which organization is responsible for fostering cooperation among central banks to promote monetary and financial stability?",
+  options: [
+    "International Monetary Fund (IMF)",
+    "Bank for International Settlements (BIS)",
+    "World Bank",
+    "International Organization of Securities Commissions (IOSCO)"
+  ],
+  correct: 1,
+  explanation: "The Bank for International Settlements (BIS) acts as a hub for cooperation among central banks and supports global monetary and financial stability. The IMF focuses on macroeconomic support and lending, the World Bank on development, and IOSCO on securities regulation."
+},
+{
+  question: "What is the primary focus of the Basel Committee on Banking Supervision (BCBS)?",
+  options: [
+    "Developing international anti-money laundering policies.",
+    "Creating standard prudential regulations such as capital adequacy standards.",
+    "Overseeing securities exchanges globally.",
+    "Regulating derivatives markets exclusively in Europe."
+  ],
+  correct: 1,
+  explanation: "The BCBS develops prudential standards, including capital and liquidity requirements under the Basel Accords, to strengthen banking systems. The other options relate to different regulatory areas not under BCBS's mandate."
+},
+{
+  question: "The Financial Action Task Force (FATF) primarily aims to combat:",
+  options: [
+    "Banking consolidation.",
+    "Money laundering and terrorist financing.",
+    "Shareholder misappropriation.",
+    "Currency inflation."
+  ],
+  correct: 1,
+  explanation: "FATF develops international standards to combat money laundering and terrorist financing. The other options are unrelated to FATF’s core mandate."
+},
+{
+  question: "Which association focuses on improving the safety and efficiency of swaps and derivatives markets?",
+  options: [
+    "International Monetary Fund (IMF)",
+    "International Swaps and Derivatives Association (ISDA)",
+    "European Central Bank (ECB)",
+    "Financial Stability Board (FSB)"
+  ],
+  correct: 1,
+  explanation: "ISDA develops standardized documentation and protocols to reduce legal and counterparty risks in derivatives markets. The IMF, ECB, and FSB have broader macroeconomic and financial stability roles."
+},
+{
+  question: "Which chapter in the textbook explores the regulation of banks and financial institutions?",
+  options: [
+    "Chapter 3",
+    "Chapter 7",
+    "Chapter 15",
+    "Chapter 8"
+  ],
+  correct: 0,
+  explanation: "Regulation of banks and financial institutions is discussed in Chapter 3. The other chapters focus on different subject areas."
+},
+{
+  question: "Which entity is responsible for safeguarding depositors' funds in the event of bank insolvency in the US?",
+  options: [
+    "SEC",
+    "FDIC",
+    "OCC",
+    "FINRA"
+  ],
+  correct: 1,
+  explanation: "The FDIC provides deposit insurance up to $250,000 per depositor per insured bank. The SEC regulates securities markets, the OCC supervises national banks, and FINRA oversees broker-dealers."
+},
+{
+  question: "Which of the following is NOT a function of the Federal Reserve System?",
+  options: [
+    "Regulating state-chartered member banks",
+    "Overseeing international securities trading",
+    "Implementing monetary policy",
+    "Supervising bank holding companies"
+  ],
+  correct: 1,
+  explanation: "The Federal Reserve implements monetary policy and supervises banks and bank holding companies. It does not directly oversee international securities trading."
+},
+{
+  question: "What is the main purpose of the European Central Bank (ECB)?",
+  options: [
+    "Supervise all banking activities in Europe.",
+    "Maintain price stability through monetary policy.",
+    "Provide direct banking services to European consumers.",
+    "Develop international trade policies."
+  ],
+  correct: 1,
+  explanation: "The ECB’s primary objective is to maintain price stability within the Eurozone through monetary policy. It does not provide retail banking services or develop trade policies."
+},
+{
+  question: "Which EU regulation aims to increase transparency and stability in OTC derivatives markets?",
+  options: [
+    "MiFID II",
+    "GDPR",
+    "EMIR",
+    "PSD2"
+  ],
+  correct: 2,
+  explanation: "EMIR enhances transparency and reduces systemic risk in OTC derivatives markets through reporting and clearing requirements. The other regulations address investment services, data protection, and payment services respectively."
+},
+{
+  question: "The Dodd-Frank Act in the US was enacted primarily to:",
+  options: [
+    "Deregulate financial markets.",
+    "Re-establish regulatory oversight following the 2007-09 crisis.",
+    "Promote international banking mergers.",
+    "Reduce capital requirements for banks."
+  ],
+  correct: 1,
+  explanation: "Dodd-Frank was enacted after the financial crisis to strengthen regulatory oversight, reduce systemic risk, and enhance consumer protection. The other options contradict its purpose."
+},
+{
+  question: "Which US regulatory body is primarily responsible for chartering and supervising national banks?",
+  options: [
+    "SEC",
+    "OCC",
+    "FDIC",
+    "FINRA"
+  ],
+  correct: 1,
+  explanation: "The Office of the Comptroller of the Currency (OCC) charters and supervises national banks. The other agencies have different supervisory roles."
+},
+{
+  question: "The purpose of the Basel III capital requirements is to:",
+  options: [
+    "Reduce banks’ capital holdings.",
+    "Strengthen bank capital and liquidity standards.",
+    "Deregulate international banking.",
+    "Focus solely on retail banking operations."
+  ],
+  correct: 1,
+  explanation: "Basel III strengthens capital and liquidity standards to enhance banks’ resilience to financial shocks. The other options misstate its objectives."
+},
+{
+  question: "Which of the following is a main responsibility of the International Accounting Standards Board (IASB)?",
+  options: [
+    "Setting financial accounting standards under IFRS.",
+    "Overseeing securities markets.",
+    "Regulating derivatives markets.",
+    "Enforcing anti-money laundering laws."
+  ],
+  correct: 0,
+  explanation: "The IASB develops International Financial Reporting Standards (IFRS) for global financial reporting. It does not regulate markets or enforce AML laws."
+},
+{
+  question: "Which US legislation is primarily concerned with regulating securities sales and protecting investors?",
+  options: [
+    "Sarbanes-Oxley Act",
+    "Securities Act of 1933",
+    "Dodd-Frank Act",
+    "Bank Secrecy Act"
+  ],
+  correct: 1,
+  explanation: "The Securities Act of 1933 requires registration and disclosure for securities offerings to protect investors. The other acts address corporate governance, financial reform, and AML."
+},
+{
+  question: "What is the primary function of the SEC?",
+  options: [
+    "Enforce monetary policy.",
+    "Regulate securities markets and protect investors.",
+    "Supervise banking institutions.",
+    "Develop international trade policies."
+  ],
+  correct: 1,
+  explanation: "The SEC regulates securities markets, enforces disclosure requirements, and protects investors. Monetary policy and bank supervision fall under other authorities."
+},
+{
+  question: "Which regulation is designed to protect consumers and ensure fair access to credit in the US?",
+  options: [
+    "Dodd-Frank Act",
+    "Consumer Financial Protection Bureau (CFPB) regulations",
+    "Basel III",
+    "EMIR"
+  ],
+  correct: 1,
+  explanation: "CFPB regulations promote fair, transparent access to credit and protect consumers from unfair practices. The other options focus on broader financial system reforms."
+},
+{
+  question: "Which US agency is responsible for overseeing money laundering and enforcing anti-money laundering laws?",
+  options: [
+    "FDIC",
+    "FinCEN",
+    "SEC",
+    "OFAC"
+  ],
+  correct: 1,
+  explanation: "FinCEN administers and enforces AML laws and collects suspicious activity reports. The other agencies have different regulatory mandates."
+},
+{
+  question: "Which of the following is NOT a role of the European Banking Authority (EBA)?",
+  options: [
+    "Set prudential standards for banks.",
+    "Oversee securities exchanges.",
+    "Ensure Basel III implementation.",
+    "Promote banking stability in the EU."
+  ],
+  correct: 1,
+  explanation: "The EBA focuses on prudential supervision and banking stability. Oversight of securities exchanges is not its function."
+},
+{
+  question: "What does the term \"shadow banking system\" refer to?",
+  options: [
+    "Official banks operating outside the law.",
+    "Financial activities outside traditional banking oversight, such as asset managers and derivatives.",
+    "Only unregulated foreign banks.",
+    "Cash-only businesses."
+  ],
+  correct: 1,
+  explanation: "Shadow banking refers to financial intermediation outside traditional bank regulation, including asset managers and certain derivatives activities, which may pose systemic risks."
+},
+{
+  question: "Which international organization facilitates the automatic exchange of financial account information among countries?",
+  options: [
+    "G20",
+    "OECD",
+    "IMF",
+    "FATF"
+  ],
+  correct: 1,
+  explanation: "The OECD developed the Common Reporting Standard (CRS) to facilitate automatic exchange of financial account information between countries. The other organizations have different mandates."
+},
+{
+  question: "What are the primary objectives of national legislators and regulators concerning the financial system?",
+  options: [
+    "To maximize bank profits and minimize regulatory oversight",
+    "To ensure individual financial institutions are managed to minimize failure risks and to prevent contagion",
+    "To promote international trade and foreign investment",
+    "To eliminate all financial institution failures"
+  ],
+  correct: 1,
+  explanation: "The primary objectives are to ensure institutions minimize failure risk and to prevent systemic contagion. Option 1 is incorrect because regulators do not aim to maximize profits or reduce oversight. Option 3 relates to economic policy, not prudential regulation. Option 4 is unrealistic, as regulation reduces risk but cannot eliminate all failures."
+},
+{
+  question: "Which event highlighted the systemic risk posed by the failure of a large international bank?",
+  options: [
+    "The failure of Lehman Brothers in 2008",
+    "The collapse of Herstatt Bank in 1974",
+    "The bankruptcy of Enron in 2001",
+    "The Asian financial crisis of 1997"
+  ],
+  correct: 1,
+  explanation: "The collapse of Herstatt Bank in 1974 exposed settlement and cross-border banking risks, highlighting systemic risk in international banking. Lehman Brothers was later significant, Enron was a corporate fraud case, and the Asian crisis was macroeconomic rather than a single bank failure."
+},
+{
+  question: "What is the main purpose of the Basel Committee on Banking Supervision (BCBS)?",
+  options: [
+    "To develop international trade policies",
+    "To provide a forum for cooperation on banking supervisory matters and develop prudential standards",
+    "To oversee currency exchange rates globally",
+    "To regulate securities markets"
+  ],
+  correct: 1,
+  explanation: "The BCBS provides a forum for supervisory cooperation and develops prudential standards such as capital and liquidity requirements. The other options fall outside its mandate."
+},
+{
+  question: "Which organization is primarily responsible for developing policies to combat money laundering and terrorist financing?",
+  options: [
+    "BIS",
+    "FATF",
+    "ISDA",
+    "SEC"
+  ],
+  correct: 1,
+  explanation: "The Financial Action Task Force (FATF) develops global standards to combat money laundering and terrorist financing. BIS focuses on central bank cooperation, ISDA on derivatives documentation, and SEC on securities regulation."
+},
+{
+  question: "What is the primary role of the International Swaps and Derivatives Association (ISDA)?",
+  options: [
+    "To regulate securities exchanges",
+    "To develop standards and documentation for derivatives transactions",
+    "To oversee global banking licenses",
+    "To supervise international currency transactions"
+  ],
+  correct: 1,
+  explanation: "ISDA develops standardized documentation and protocols that reduce legal and counterparty risk in derivatives markets. It does not regulate exchanges or supervise banking licenses."
+},
+{
+  question: "Which of the following is a key focus of the \"market confidence\" regulation element?",
+  options: [
+    "Protecting individual bank profitability",
+    "Maintaining confidence in financial markets for raising funds",
+    "Limiting international trade",
+    "Simplifying banking operations"
+  ],
+  correct: 1,
+  explanation: "Market confidence regulation aims to ensure investors and participants trust financial markets, enabling efficient capital raising. The other options do not reflect this regulatory objective."
+},
+{
+  question: "What is the purpose of the European Central Bank (ECB)?",
+  options: [
+    "To regulate securities markets globally",
+    "To oversee monetary policy and ensure price stability within the EU",
+    "To supervise US banks operating in Europe",
+    "To develop international accounting standards"
+  ],
+  correct: 1,
+  explanation: "The ECB’s primary objective is to maintain price stability through monetary policy in the Eurozone. It does not regulate global securities markets or set accounting standards."
+},
+{
+  question: "Which regulation directly binds all EU member states once enacted?",
+  options: [
+    "Directive",
+    "Regulation",
+    "Memorandum of Understanding",
+    "Treaty"
+  ],
+  correct: 1,
+  explanation: "An EU Regulation is directly applicable and binding in all member states. A Directive requires transposition into national law. The other options are different legal instruments."
+},
+{
+  question: "The U.S. Federal Reserve's main responsibilities include all of the following EXCEPT:",
+  options: [
+    "Implementing monetary policy",
+    "Overseeing federal banking laws",
+    "Managing the US stock exchange",
+    "Supervising state-chartered member banks"
+  ],
+  correct: 2,
+  explanation: "The Federal Reserve implements monetary policy and supervises certain banks, but it does not manage the US stock exchange. That role falls outside its mandate."
+},
+{
+  question: "Which U.S. agency insures deposits up to at least $250,000 per depositor per insured bank?",
+  options: [
+    "OCC",
+    "SEC",
+    "FDIC",
+    "FINRA"
+  ],
+  correct: 2,
+  explanation: "The FDIC provides deposit insurance up to $250,000 per depositor per insured bank. The OCC supervises national banks, the SEC regulates securities markets, and FINRA oversees broker-dealers."
+},
+{
+  question: "The Securities and Exchange Commission (SEC) is responsible for:",
+  options: [
+    "Regulating currency exchange rates",
+    "Supervising securities markets and enforcing disclosure standards",
+    "Overseeing banking reserves",
+    "Regulating insurance companies"
+  ],
+  correct: 1,
+  explanation: "The SEC regulates securities markets, enforces disclosure requirements, and protects investors. It does not regulate currency exchange rates, banking reserves, or insurance companies."
+},
+{
+  question: "What is the primary purpose of the International Financial Reporting Standards (IFRS)?",
+  options: [
+    "To regulate derivatives markets globally",
+    "To develop international accounting standards for financial reporting",
+    "To oversee cross-border bank operations",
+    "To regulate money laundering activities"
+  ],
+  correct: 1,
+  explanation: "IFRS provides internationally recognized accounting standards for financial reporting, improving transparency and comparability. The other options relate to different regulatory areas."
+},
+{
+  question: "Which organization was established in 1961 to develop world trade and international cooperation?",
+  options: [
+    "G7",
+    "OECD",
+    "IMF",
+    "WTO"
+  ],
+  correct: 1,
+  explanation: "The OECD was established in 1961 to promote economic cooperation and development among member countries. The other organizations have different mandates and origins."
+},
+{
+  question: "In the U.S., which act of legislation is primarily responsible for regulating anti-money laundering activities?",
+  options: [
+    "Glass-Steagall Act",
+    "Bank Secrecy Act (BSA)",
+    "Sarbanes-Oxley Act",
+    "Dodd-Frank Act"
+  ],
+  correct: 1,
+  explanation: "The Bank Secrecy Act (BSA) forms the foundation of U.S. anti-money laundering regulation. The other acts address banking separation, corporate governance, and financial reform."
+},
+{
+  question: "Which EU regulation aims to improve the stability of OTC derivatives markets and mandates reporting and clearing obligations?",
+  options: [
+    "GDPR",
+    "EMIR",
+    "MiFID II",
+    "PSD2"
+  ],
+  correct: 1,
+  explanation: "EMIR enhances transparency and stability in OTC derivatives markets through reporting and central clearing requirements. The other regulations focus on data protection, investment services, and payment services."
+},
+{
+  question: "What is one of the roles of the Financial Stability Oversight Council (FSOC) in the U.S.?",
+  options: [
+    "To directly supervise banks",
+    "To prevent systemic risk and coordinate with other agencies",
+    "To regulate securities firms exclusively",
+    "To set international trade policies"
+  ],
+  correct: 1,
+  explanation: "FSOC monitors systemic risk and coordinates among U.S. regulatory agencies. It does not directly supervise banks or set trade policy."
+},
+{
+  question: "Which U.S. regulatory agency is responsible for overseeing US branches of international banks?",
+  options: [
+    "FDIC",
+    "OCC",
+    "SEC",
+    "CFTC"
+  ],
+  correct: 1,
+  explanation: "The OCC supervises national banks and federal branches of foreign banks operating in the U.S. The other agencies have different regulatory mandates."
+},
+{
+  question: "Which of the following is NOT a typical focus of national financial regulation?",
+  options: [
+    "Bank account opening procedures",
+    "Tax collection and enforcement",
+    "Regulation of currency exchange rates in the global market",
+    "Securities registration requirements"
+  ],
+  correct: 2,
+  explanation: "National regulators typically oversee domestic financial institutions and markets, not global currency exchange rate regulation. The other options fall within domestic regulatory oversight."
+},
+{
+  question: "What is a key difference between a regulation and a directive in the EU legislative process?",
+  options: [
+    "Regulations are binding on all member states once enacted, directives require implementation into national law",
+    "Directives are binding, and regulations are optional guidelines",
+    "Both are equally binding without implementation differences",
+    "Regulations only apply to financial institutions, directives only to governments"
+  ],
+  correct: 0,
+  explanation: "EU Regulations are directly applicable and binding in all member states, while Directives require transposition into national law. The other options incorrectly describe their legal effect."
+},
+{
+  question: "Which of the following laws is primarily aimed at protecting consumers against unfair market practices and fraud?",
+  options: [
+    "Dodd-Frank Act",
+    "Consumer Financial Protection Bureau (CFPB) regulations",
+    "Basel III Standards",
+    "Securities Act of 1933"
+  ],
+  correct: 1,
+  explanation: "CFPB regulations focus specifically on protecting consumers from unfair, deceptive, or abusive practices. The other options address broader financial system reforms or investor disclosure requirements."
+}
+];
+
+let questions = JSON.parse(localStorage.getItem("questions")) || defaultQuestions;
+
+let index = 0, correct = 0, wrong = 0;
+let timeLeft = 90, timer;
+let student = "";
+
+/* STUDENT FLOW */
+function startTest() {
+  student = document.getElementById("studentName").value.trim();
+  if (!student) return alert("Please enter your name");
+
+  document.getElementById("startPage").classList.add("hidden");
+  document.getElementById("quizPage").classList.remove("hidden");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  clearInterval(timer);
+  timeLeft = 90;
+  document.getElementById("timer").textContent = `Time Left: ${timeLeft}s`;
+  document.getElementById("nextBtn").classList.add("hidden");
+  document.getElementById("explanation").textContent = "";
+
+  const q = questions[index];
+  document.getElementById("question").textContent = `Q${index + 1}. ${q.question}`;
+
+  const optionsDiv = document.getElementById("options");
+  optionsDiv.innerHTML = "";
+
+  q.options.forEach((opt, i) => {
+    const div = document.createElement("div");
+    div.className = "option";
+    div.textContent = opt;
+    div.onclick = () => selectAnswer(div, i);
+    optionsDiv.appendChild(div);
+  });
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").textContent = `Time Left: ${timeLeft}s`;
+    if (timeLeft === 0) {
+      clearInterval(timer);
+      wrong++;
+      showCorrect();
+    }
+  }, 1000);
+}
+
+function selectAnswer(el, i) {
+  clearInterval(timer);
+  const q = questions[index];
+  const opts = document.querySelectorAll(".option");
+  opts.forEach(o => o.onclick = null);
+
+  if (i === q.correct) {
+    el.classList.add("correct");
+    correct++;
+  } else {
+    el.classList.add("wrong");
+    opts[q.correct].classList.add("correct");
+    wrong++;
+  }
+
+  document.getElementById("explanation").textContent = q.explanation;
+  document.getElementById("nextBtn").classList.remove("hidden");
+}
+
+function showCorrect() {
+  const q = questions[index];
+  document.querySelectorAll(".option")[q.correct].classList.add("correct");
+  document.getElementById("explanation").textContent = q.explanation;
+  document.getElementById("nextBtn").classList.remove("hidden");
+}
+
+function nextQuestion() {
+  index++;
+  if (index < questions.length) loadQuestion();
+  else showResult();
+}
+
+function showResult() {
+  document.getElementById("quizPage").classList.add("hidden");
+  document.getElementById("resultPage").classList.remove("hidden");
+  document.getElementById("finalName").textContent = `Name: ${student}`;
+  document.getElementById("finalScore").textContent =
+    `Correct: ${correct} | Incorrect: ${wrong}`;
+  document.getElementById("finalAccuracy").textContent =
+    `Accuracy: ${Math.round((correct / questions.length) * 100)}%`;
+}
+
+/* ADMIN FLOW */
+function openAdmin() {
+  const pass = prompt("Enter admin password");
+  if (pass !== ADMIN_PASSWORD) return alert("Wrong password");
+
+  document.getElementById("startPage").classList.add("hidden");
+  document.getElementById("quizPage").classList.add("hidden");
+  document.getElementById("resultPage").classList.add("hidden");
+  document.getElementById("adminPage").classList.remove("hidden");
+
+  document.getElementById("adminEditor").value =
+    JSON.stringify(questions, null, 2);
+}
+
+function saveQuestions() {
+  try {
+    const edited = JSON.parse(document.getElementById("adminEditor").value);
+    if (!Array.isArray(edited) || edited.length !== 50) {
+      alert("Exactly 50 questions required");
+      return;
+    }
+    localStorage.setItem("questions", JSON.stringify(edited));
+    alert("Questions saved successfully");
+    location.reload();
+  } catch {
+    alert("Invalid JSON format");
+  }
+}
+</script>
+
+</body>
+</html>
