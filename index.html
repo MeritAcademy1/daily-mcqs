@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Merit Academy MCQ</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #f4f8ff;
+}
+
+header {
+  background: #0b3c6d;
+  color: white;
+  padding: 14px;
+  font-size: 22px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.container {
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+  text-align: center;
+}
+
+.title {
+  font-size: 40px;
+  color: #0b3c6d;
+  font-weight: bold;
+}
+
+.subtitle {
+  font-size: 18px;
+  color: #0b3c6d;
+  margin-bottom: 30px;
+}
+
+input {
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+button {
+  margin-top: 20px;
+  padding: 12px 25px;
+  font-size: 16px;
+  background: #0b3c6d;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.option {
+  background: #eee;
+  padding: 14px;
+  margin: 10px 0;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.option:hover { background: #dde8ff; }
+
+.correct { background: #b6f5c3 !important; }
+.wrong { background: #f7b2b2 !important; }
+
+.hidden { display: none; }
+
+#timer {
+  font-weight: bold;
+  color: red;
+  margin-bottom: 10px;
+}
+
+textarea {
+  width: 100%;
+  height: 320px;
+  font-size: 14px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  Merit Academy
+  <span style="font-size:14px; cursor:pointer;" onclick="openAdmin()">Admin</span>
+</header>
+
+<div class="container">
+
+<!-- WELCOME PAGE -->
+<div id="startPage">
+  <div class="title">MERIT ACADEMY</div>
+  <div class="subtitle">~ CTP Falak Meer</div>
+  <input id="studentName" placeholder="Enter your name">
+  <button onclick="startTest()">Start Test</button>
+</div>
+
+<!-- QUIZ PAGE -->
+<div id="quizPage" class="hidden">
+  <div id="timer"></div>
+  <h3 id="question"></h3>
+  <div id="options"></div>
+  <p id="explanation"></p>
+  <button id="nextBtn" class="hidden" onclick="nextQuestion()">Next Question</button>
+</div>
+
+<!-- RESULT PAGE -->
+<div id="resultPage" class="hidden">
+  <h2>Today's Performance</h2>
+  <p id="finalName"></p>
+  <p id="finalScore"></p>
+  <p id="finalAccuracy"></p>
+</div>
+
+<!-- ADMIN PAGE -->
+<div id="adminPage" class="hidden">
+  <h2>Admin Panel</h2>
+  <p>Edit exactly 5 questions (JSON format)</p>
+  <textarea id="adminEditor"></textarea>
+  <button onclick="saveQuestions()">Save Questions</button>
+</div>
+
+</div>
+
+<script>
+const ADMIN_PASSWORD = "FalakPardiwala@786";
+
+/* DEFAULT QUESTIONS */
+const defaultQuestions = [
+  {
+  "question": "What type of loan allows a business to borrow up to a specified amount, repay, and borrow again?",
+  "options": [
+    "Term loan",
+    "Revolving line of credit",
+    "Overdraft facility",
+    "Commercial paper"
+  ],
+  "correct": 1,
+  "explanation": "A revolving line of credit lets a business borrow, repay, and borrow again up to a specified credit limit."
+},
+{
+  "question": "Commercial paper is typically:",
+  "options": [
+    "Secured promissory notes",
+    "Unsecured short-term promissory notes",
+    "Municipal bonds",
+    "Equity securities"
+  ],
+  "correct": 1,
+  "explanation": "Commercial paper consists of unsecured, discounted, short-term promissory notes issued by corporations."
+},
+{
+  "question": "Which type of bank accepts deposits but does not offer checking accounts?",
+  "options": [
+    "Commercial bank",
+    "Investment bank",
+    "Industrial bank",
+    "Universal bank"
+  ],
+  "correct": 2,
+  "explanation": "Industrial banks accept deposits but generally do not provide checking accounts."
+},
+{
+  "question": "What service allows businesses to hold account balances in multiple currencies?",
+  "options": [
+    "Single currency account",
+    "Multicurrency account",
+    "FX spot account",
+    "Forward contract"
+  ],
+  "correct": 1,
+  "explanation": "Multicurrency accounts allow customers to hold and transact in several currencies through virtual accounts."
+},
+{
+  "question": "Which mechanism allows commercial banks to create money through lending?",
+  "options": [
+    "Central bank money market operations",
+    "Fractional reserve banking",
+    "Government bond purchasing",
+    "Capital adequacy rules"
+  ],
+  "correct": 1,
+  "explanation": "Fractional reserve banking enables banks to lend a multiple of their reserves, effectively creating money."
+},
+{
+  "question": "Basel III requires banks to hold a minimum common equity of what percentage of risk-weighted assets?",
+  "options": [
+    "2%",
+    "4.5%",
+    "8%",
+    "10%"
+  ],
+  "correct": 1,
+  "explanation": "Basel III sets a minimum common equity requirement of 4.5% of risk-weighted assets, excluding buffers."
+},
+{
+  "question": "Which act repealed most provisions of the Glass-Steagall Act?",
+  "options": [
+    "Dodd-Frank Act",
+    "Gramm-Leach-Bliley Act",
+    "Federal Reserve Act",
+    "Bank Holding Company Act"
+  ],
+  "correct": 1,
+  "explanation": "The Gramm-Leach-Bliley Act of 1999 repealed key provisions of the Glass-Steagall Act and allowed banks to offer both commercial and investment banking services."
+},
+{
+  "question": "What regulatory body enforces Regulation D in the US?",
+  "options": [
+    "Federal Deposit Insurance Corporation (FDIC)",
+    "Federal Reserve",
+    "Securities and Exchange Commission (SEC)",
+    "Office of the Comptroller of the Currency (OCC)"
+  ],
+  "correct": 1,
+  "explanation": "The Federal Reserve is responsible for implementing and enforcing Regulation D, which governs reserve requirements."
+},
+{
+  "question": "Which type of financial institution primarily facilitates mergers, acquisitions, and corporate reorganizations?",
+  "options": [
+    "Commercial banks",
+    "Investment banks",
+    "Asset managers",
+    "Captive finance companies"
+  ],
+  "correct": 1,
+  "explanation": "Investment banks specialize in corporate advisory services such as mergers, acquisitions, and restructurings."
+},
+{
+  "question": "An overdraft facility typically is:",
+  "options": [
+    "Secured",
+    "Available only for more than one year",
+    "Repayable on demand and usually unsecured",
+    "Only available to individuals"
+  ],
+  "correct": 2,
+  "explanation": "Overdraft facilities are generally repayable on demand and are often unsecured credit arrangements."
+},
+{
+  "question": "What does the term 'bank run' refer to?",
+  "options": [
+    "Banks distributing dividends",
+    "Customers withdrawing deposits simultaneously out of fear",
+    "Banks merging with other institutions",
+    "Regulators increasing reserve requirements"
+  ],
+  "correct": 1,
+  "explanation": "A bank run occurs when many depositors withdraw their funds at the same time due to fears about the bank's solvency."
+},
+{
+  "question": "What is the difference between the ask price and the bid price called?",
+  "options": [
+    "Margin",
+    "Spread",
+    "Interest rate",
+    "Leverage"
+  ],
+  "correct": 1,
+  "explanation": "The difference between the ask price (selling price) and the bid price (buying price) is called the spread."
+},
+{
+  "question": "What is a private equity firm’s common strategy?",
+  "options": [
+    "Investing only in government securities",
+    "Purchasing and improving underperforming companies",
+    "Providing short-term loans secured by assets",
+    "Operating checking accounts"
+  ],
+  "correct": 1,
+  "explanation": "Private equity firms commonly acquire underperforming companies and attempt to improve their operations and value."
+},
+{
+  "question": "Which regulation prohibits tying credit extension to customer purchase of other products?",
+  "options": [
+    "Regulation D",
+    "Anti-tying Amendments to the Bank Holding Company Act",
+    "Regulation Q",
+    "Regulation Y"
+  ],
+  "correct": 1,
+  "explanation": "The Anti-tying Amendments to the Bank Holding Company Act prohibit banks from conditioning credit on the purchase of other services."
+},
+{
+  "question": "The Volcker Rule restricts banks from:",
+  "options": [
+    "Accepting deposits",
+    "Engaging in proprietary trading for their own account",
+    "Offering investment advice",
+    "Issuing commercial paper"
+  ],
+  "correct": 1,
+  "explanation": "The Volcker Rule restricts banks from engaging in proprietary trading using their own funds."
+},
+{
+  "question": "What is a 'borrowing base'?",
+  "options": [
+    "Interest rate charged on loans",
+    "Maximum lending amount based on collateral value",
+    "Bank’s net interest margin",
+    "Minimum deposit balance required by banks"
+  ],
+  "correct": 1,
+  "explanation": "A borrowing base represents the maximum loan amount a lender is willing to extend based on the value of pledged collateral."
+},
+{
+  "question": "Which service facilitates the settlement of trade obligations?",
+  "options": [
+    "Multicurrency accounts",
+    "Trade services",
+    "Overdraft facilities",
+    "Asset-based lending"
+  ],
+  "correct": 1,
+  "explanation": "Trade services help businesses manage payment and settlement obligations related to domestic and international trade."
+},
+{
+  "question": "The Dodd-Frank Act introduced:",
+  "options": [
+    "Community Reinvestment Act",
+    "The Financial Stability Oversight Council",
+    "Glass-Steagall Act",
+    "Federal Reserve Act"
+  ],
+  "correct": 1,
+  "explanation": "The Dodd-Frank Act created the Financial Stability Oversight Council to monitor systemic financial risks."
+},
+{
+  "question": "Which institution regulates federally chartered credit unions in the US?",
+  "options": [
+    "Federal Reserve",
+    "National Credit Union Administration (NCUA)",
+    "FDIC",
+    "SEC"
+  ],
+  "correct": 1,
+  "explanation": "The National Credit Union Administration supervises and regulates federally chartered credit unions."
+},
+{
+  "question": "What is the primary source of earnings for banks?",
+  "options": [
+    "Commissions from brokerage services",
+    "Net interest margin",
+    "Fees from foreign exchange services",
+    "Investment banking fees"
+  ],
+  "correct": 1,
+  "explanation": "Banks mainly earn income from the net interest margin, which is the difference between interest earned on loans and interest paid on deposits."
+},
+{
+  "question": "Deposit insurance aims primarily to:",
+  "options": [
+    "Increase bank profits",
+    "Protect small depositors and maintain confidence",
+    "Eliminate bank regulation",
+    "Provide risk-free investments"
+  ],
+  "correct": 1,
+  "explanation": "Deposit insurance protects depositors and helps maintain public confidence in the banking system."
+},
+{
+  "question": "Which of the following is NOT typically offered by captive finance companies?",
+  "options": [
+    "Financing for parent company products",
+    "Raising funds through commercial paper",
+    "Accepting checking deposits",
+    "Loans to customers"
+  ],
+  "correct": 2,
+  "explanation": "Captive finance companies finance purchases of their parent company's products but typically do not accept checking deposits."
+},
+{
+  "question": "What is a key characteristic of universal banks?",
+  "options": [
+    "Only provide commercial banking",
+    "Only provide investment banking",
+    "Offer both commercial and investment banking services",
+    "Are exclusively government owned"
+  ],
+  "correct": 2,
+  "explanation": "Universal banks provide both commercial banking services and investment banking services."
+},
+{
+  "question": "What does Regulation Q prohibit?",
+  "options": [
+    "Banks offering checking accounts to corporations",
+    "Paying interest on demand deposits (historically)",
+    "Foreign exchange transactions",
+    "Loan sales"
+  ],
+  "correct": 1,
+  "explanation": "Regulation Q historically prohibited banks from paying interest on demand deposits."
+},
+{
+  "question": "Which Basel accord first introduced operational risk in capital requirements?",
+  "options": [
+    "Basel I",
+    "Basel II",
+    "Basel III",
+    "Basel IV"
+  ],
+  "correct": 1,
+  "explanation": "Basel II introduced operational risk as a component of capital adequacy requirements."
+}
+];
+
+let questions = JSON.parse(localStorage.getItem("questions")) || defaultQuestions;
+
+let index = 0, correct = 0, wrong = 0;
+let timeLeft = 90, timer;
+let student = "";
+
+/* STUDENT FLOW */
+function startTest() {
+  student = document.getElementById("studentName").value.trim();
+  if (!student) return alert("Please enter your name");
+
+  document.getElementById("startPage").classList.add("hidden");
+  document.getElementById("quizPage").classList.remove("hidden");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  clearInterval(timer);
+  timeLeft = 90;
+  document.getElementById("timer").textContent = `Time Left: ${timeLeft}s`;
+  document.getElementById("nextBtn").classList.add("hidden");
+  document.getElementById("explanation").textContent = "";
+
+  const q = questions[index];
+  document.getElementById("question").textContent = `Q${index + 1}. ${q.question}`;
+
+  const optionsDiv = document.getElementById("options");
+  optionsDiv.innerHTML = "";
+
+  q.options.forEach((opt, i) => {
+    const div = document.createElement("div");
+    div.className = "option";
+    div.textContent = opt;
+    div.onclick = () => selectAnswer(div, i);
+    optionsDiv.appendChild(div);
+  });
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").textContent = `Time Left: ${timeLeft}s`;
+    if (timeLeft === 0) {
+      clearInterval(timer);
+      wrong++;
+      showCorrect();
+    }
+  }, 1000);
+}
+
+function selectAnswer(el, i) {
+  clearInterval(timer);
+  const q = questions[index];
+  const opts = document.querySelectorAll(".option");
+  opts.forEach(o => o.onclick = null);
+
+  if (i === q.correct) {
+    el.classList.add("correct");
+    correct++;
+  } else {
+    el.classList.add("wrong");
+    opts[q.correct].classList.add("correct");
+    wrong++;
+  }
+
+  document.getElementById("explanation").textContent = q.explanation;
+  document.getElementById("nextBtn").classList.remove("hidden");
+}
+
+function showCorrect() {
+  const q = questions[index];
+  document.querySelectorAll(".option")[q.correct].classList.add("correct");
+  document.getElementById("explanation").textContent = q.explanation;
+  document.getElementById("nextBtn").classList.remove("hidden");
+}
+
+function nextQuestion() {
+  index++;
+  if (index < questions.length) loadQuestion();
+  else showResult();
+}
+
+function showResult() {
+  document.getElementById("quizPage").classList.add("hidden");
+  document.getElementById("resultPage").classList.remove("hidden");
+  document.getElementById("finalName").textContent = `Name: ${student}`;
+  document.getElementById("finalScore").textContent =
+    `Correct: ${correct} | Incorrect: ${wrong}`;
+  document.getElementById("finalAccuracy").textContent =
+    `Accuracy: ${Math.round((correct / questions.length) * 100)}%`;
+}
+
+/* ADMIN FLOW */
+function openAdmin() {
+  const pass = prompt("Enter admin password");
+  if (pass !== ADMIN_PASSWORD) return alert("Wrong password");
+
+  document.getElementById("startPage").classList.add("hidden");
+  document.getElementById("quizPage").classList.add("hidden");
+  document.getElementById("resultPage").classList.add("hidden");
+  document.getElementById("adminPage").classList.remove("hidden");
+
+  document.getElementById("adminEditor").value =
+    JSON.stringify(questions, null, 2);
+}
+
+function saveQuestions() {
+  try {
+    const edited = JSON.parse(document.getElementById("adminEditor").value);
+    if (!Array.isArray(edited) || edited.length !== 50) {
+      alert("Exactly 50 questions required");
+      return;
+    }
+    localStorage.setItem("questions", JSON.stringify(edited));
+    alert("Questions saved successfully");
+    location.reload();
+  } catch {
+    alert("Invalid JSON format");
+  }
+}
+</script>
+
+</body>
+</html>
